@@ -1,32 +1,45 @@
 <template>
   <div class="hello">
     <h1>TESTING GITHUB PAGES WITH VUE.JS</h1>
+    <button @click="fetchData">Click Me!</button>
+    <p v-if="fact">{{ fact }}</p>
   </div>
 </template>
-
 <script>
 export default {
-  name: 'HelloWorld',
   props: {
-    msg: String
-  }
-}
+    msg: String,
+  },
+  data() {
+    return {
+      fact: "",
+    };
+  },
+  methods: {
+    fetchData() {
+      fetch('https://facts-by-api-ninjas.p.rapidapi.com/v1/facts', {
+        method: "GET",
+        headers: {
+          "X-RapidAPI-Key": 'your-api-key',
+          "X-RapidAPI-Host": 'facts-by-api-ninjas.p.rapidapi.com',
+        },
+      })
+        .then((response) => {
+          response.json().then((data) => {
+            this.fact = data[0].fact;
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+  },
+};
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+<style>
+button {
+padding: 12px 32px;
+font-size: 16px;
+border-radius: 8px;
 }
 </style>
